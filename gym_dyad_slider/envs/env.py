@@ -79,11 +79,13 @@ class PhysicalDyads():
         act_high = np.array([self.force_max, self.force_max])
         self.action_space = spaces.Box(-act_high, act_high, dtype=np.float32)
         
-        obs_high = np.array([self.max_err * 2,
-                         np.finfo(np.float32).max,
-                         self.force_max,
-                         np.finfo(np.float32).max],
-                        dtype=np.float32)
+        obs_high = np.array([self.max_ref * 2,
+                             2*np.pi*self.max_freq*self.max_ref * 2,
+                             (self.max_ref+self.max_err) * 2,
+                             np.finfo(np.float32).max,
+                             self.force_max,
+                             np.finfo(np.float32).max],
+                            dtype=np.float32)
         
         self.observation_space = spaces.Box(-obs_high, obs_high, dtype=np.float32)
         
@@ -143,7 +145,7 @@ class PhysicalDyads():
         (renew_traj is True):
             # generate a traj
             self.traj_time, self.traj = self.traj_creator.generate_random(self.duration, \
-                n_traj=1, max_amp=self.max_ref, traj_max_f=self.max_freq, rel_amps=None, fixed_effort=True, \
+                n_traj=1, max_amp=self.max_ref, traj_max_f=self.max_freq, rel_amps=None, fixed_effort=False, \
                 obj_mass=self.obj_mass, obj_fric=self.obj_fric, n_deriv=1, ret_specs=False)
         
         self.x, self.v  = self.traj[0][0], self.traj[1][0]

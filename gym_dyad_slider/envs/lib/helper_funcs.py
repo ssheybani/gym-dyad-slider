@@ -3,6 +3,9 @@ import collections
 from scipy.stats import truncnorm
 
 
+def ndrms(x, axis=0):
+    return np.sqrt(np.mean(x**2, axis=axis))
+
 def roots2ipd(r1, r2, r3, m, b):
     coefs = np.poly([r1, r2, r3])
     Ki = coefs[3]*m

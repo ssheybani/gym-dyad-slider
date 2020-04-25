@@ -119,11 +119,18 @@ class Trajectory():
         for i in range(n_traj):
             
             traj_spec = self.generate_traj_spec(rel_amps, max_amp, traj_max_f, amp_std=0.03)
-            # Determine the scaling factor of (the amplitude of) the traj_spec so that they require same energy
+            # Determine the scaling factor of (the amplitude of) the traj_spec so that they require the same energy
             if fixed_effort is True:
                 sc_fac = self._get_traj_rms(traj_spec, obj_mass, obj_fric)
                 for i in range(len(traj_spec)):
                     traj_spec[i][0] = traj_spec[i][0]/sc_fac
+            else:
+                # Make sure the amplitude of the whole signal remains less than max_amp
+                sum_amp = 0.
+                for i in range(len(traj_spec)):
+                    sum_amp += traj_spec[i][0]
+                for i in range(len(traj_spec)):
+                    traj_spec[i][0]*= max_amp/sum_amp
             
             traj_specs.append(traj_spec) 
             time1, traj = self.generate(traj_spec, duration)
